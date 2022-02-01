@@ -102,12 +102,19 @@ addDepartment = () => {
           console.log('Added department in the database');
         }
       );
-      viewAllEmployees();
+      menu();
     });
 };
 
 // this will add role and salary
 addRole = () => {
+  db.getDepartment().then(([rows]) => {
+    let departments = rows;
+    const choicesDepartment = departments.map(({ id, name }) => ({
+      name: name,
+      value: id,
+    }));
+  });
   inquirer
     .prompt([
       {
@@ -119,20 +126,12 @@ addRole = () => {
         name: 'salary',
         type: 'number',
         message: 'What is the salary of the role?',
-        validate: (salary) => {
-          if (salary) {
-            return true;
-          } else {
-            console.log('Please enter numeric value');
-            return false;
-          }
-        },
       },
       {
         name: 'department_id',
         type: 'list',
         message: 'Which department does the role belong to?',
-        choices: getDepartment(),
+        choices: choicesDepartment,
       },
     ])
     .then((res) => {
